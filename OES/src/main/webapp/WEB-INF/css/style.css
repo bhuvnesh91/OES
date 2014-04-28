@@ -1,0 +1,303 @@
+
+body, html  { height: 100%; }
+html, body, div, span, applet, object, iframe,
+/*h1, h2, h3, h4, h5, h6,*/ p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}
+a
+{
+    outline:none;
+}
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background: url(../images/background.jpg);
+    margin:0 auto;
+    color:#666666;
+    line-height:1;
+}
+a:link {
+    color: #666;
+    font-weight: bold;
+    text-decoration:none;
+}
+a:visited {
+    color: #666;
+    font-weight:bold;
+    text-decoration:none;
+}
+a:active,
+a:hover {
+    color: #bd5a35;
+    text-decoration:underline;
+}
+h1, h2, h3, h4, h5, h6{
+    padding:0px;
+    margin:0px;
+}
+
+h2{ padding:18px 0px;
+    text-transform:uppercase;
+    font-size:13px;
+    border-top:1px solid #fafafa;
+    background: #ededed;
+    background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#ebebeb));
+    background: -moz-linear-gradient(top,  #ededed,  #ebebeb);}
+.heading{
+    font-family:Arial, Helvetica, sans-serif;
+    color:#454545;
+    font-size:12px;
+    text-shadow: 1px 1px 0px #fff;
+    background:#eaebec;
+    border:#ccc 1px solid;
+    border-bottom:none;
+    -moz-border-radius:3px 3px 0px 0px;
+    -webkit-border-radius:3px 3px 0px 0px;
+    border-radius:3px 3px 0px 0px;
+    -moz-box-shadow: 0 1px 2px #d1d1d1;
+    -webkit-box-shadow: 0 1px 2px #d1d1d1;
+    box-shadow: 0 1px 2px #d1d1d1;
+}
+/*
+Table Style - This is what you want
+------------------------------------------------------------------ */
+table a:link {
+    color: #666;
+    font-weight: bold;
+    text-decoration:none;
+}
+table a:visited {
+    color: #999999;
+    font-weight:bold;
+    text-decoration:none;
+}
+table a:active,
+table a:hover {
+    color: #bd5a35;
+    text-decoration:underline;
+}
+table {
+    font-family:Arial, Helvetica, sans-serif;
+    color:#454545;
+    font-size:12px;
+    text-shadow: 1px 1px 0px #fff;
+    background:#eaebec;
+    border:#ccc 1px solid;
+    -moz-border-radius:0px 0px 3px 3px;
+    -webkit-border-radius:0px 0px 3px 3px;
+    border-radius:0px 0px 3px 3px;
+    margin-bottom:20px;
+    -moz-box-shadow: 0 1px 2px #d1d1d1;
+    -webkit-box-shadow: 0 1px 2px #d1d1d1;
+    box-shadow: 0 1px 2px #d1d1d1;
+}
+
+table tr{
+    text-align: center;
+    padding-left:20px;
+}
+table tr td:first-child{
+    text-align: left;
+    padding-left:20px;
+    border-left: 0;
+}
+table tr td {
+    padding:8px;
+    border-top: 1px solid #ffffff;
+    border-bottom:1px solid #e0e0e0;
+    border-left: 1px solid #e0e0e0;
+    background: #fafafa;
+    font-weight:bold;
+    background: -webkit-gradient(linear, left top, left bottom, from(#fbfbfb), to(#fafafa));
+    background: -moz-linear-gradient(top,  #fbfbfb,  #fafafa);
+}
+table tr.even td{
+    background: #f6f6f6;
+    background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#f6f6f6));
+    background: -moz-linear-gradient(top,  #f8f8f8,  #f6f6f6);
+}
+table tr:last-child td{
+    border-bottom:0;
+}
+table tr:last-child td:first-child{
+    -moz-border-radius-bottomleft:3px;
+    -webkit-border-bottom-left-radius:3px;
+    border-bottom-left-radius:3px;
+}
+table tr:last-child td:last-child{
+    -moz-border-radius-bottomright:3px;
+    -webkit-border-bottom-right-radius:3px;
+    border-bottom-right-radius:3px;
+}
+table tr:hover td{
+    background: #f2f2f2;
+    background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#f0f0f0));
+    background: -moz-linear-gradient(top,  #f2f2f2,  #f0f0f0);	
+}
+select {
+    width: 215px !important ;
+    height:31px;
+}
+select option {
+    padding:3px;
+}
+
+input, textarea, select {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #d1d1d1;
+    box-shadow: 0 0 6px #ddd;
+    color: #000000;
+    font-size: 12px;
+    font-family:Arial, Helvetica, sans-serif;
+    -moz-border-radius:2px;
+    -webkit-border-radius:2px;
+
+    border-radius:2px;
+    padding: 6px;
+    width: 200px;
+}
+input:hover, textarea:hover {
+    box-shadow: 0 0 8px #ccc;
+}
+
+
+
+input.submit {
+    background:#116eab;
+    background: -moz-linear-gradient(25% 75% 90deg, #1378bb, #116eab) repeat scroll 0 0 transparent;
+    background: -webkit-linear-gradient(25% 75% 90deg, #1378bb, #116eab) repeat scroll 0 0 transparent;
+    border: medium none;
+    border-radius: 4px 4px 4px 4px;
+    color: #EEEEEE;
+    text-transform: uppercase;
+    cursor:pointer;
+    float:left;
+    padding:5px;
+    width: 75px;
+    margin-right:5px;
+}
+h5{ text-align:center; font-size:12px; font-weight:normal; color:#666666;}
+.main{ width:650px; margin:auto}
+header{  
+    border-top:8px solid #0969a9;
+    color: #262626;
+    font-family: georgia,serif;
+    font-size: 10px;
+}
+#header {
+    height: 100px;
+}
+.container {
+    margin: 0 auto;
+    overflow: visible;
+    width: 650px;
+}
+
+#header .mixLogo {
+    margin:12px 0 0 2px;
+}
+span.red{ color:#c40808;}
+footer{ padding-bottom:15px;}
+
+.main_log{ width:99%; margin:5px;}
+.main_log .heading h2{ padding:15px;}
+.main_log td{ padding:8px 10px !important; font-weight:normal; font-size:12px; font-family: "Times New Roman", Times, serif; color:#333333;}
+
+.error {
+    color: #ff0000;
+}
+
+.main_content
+{
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #DDDDDD;
+    float: left;
+    padding: 14px;
+}
+.content
+{
+    width:620px;
+    margin:auto;
+}
+
+ul.tabs {
+    margin: 0;
+    padding: 0;
+    float: left;
+    list-style: none;
+    height: 32px;
+    border-bottom: 1px solid #DDDDDD;
+    border-left: 1px solid #DDDDDD;
+    width: 100%;
+}
+ul.tabs li {
+
+    float: left;
+    margin: 0;
+    padding: 0;
+    height: 31px;
+    line-height: 31px;
+    border: 1px solid #DDDDDD;
+    border-left: none;
+    margin-bottom: -1px;
+    background: #F0F0F0;
+    overflow: hidden;
+    position: relative;
+}
+ul.tabs li a {
+    text-decoration: none;
+    color: #454545;
+    display: block;
+    font-size:12px;
+    text-transform:uppercase;
+    padding: 0 20px;
+    border: 1px solid #fff;
+    outline: none;
+}
+ul.tabs li a:hover {
+    background: #ccc;
+}  
+html ul.tabs li.active, html ul.tabs li.active a:hover  {
+    background: #fff;
+    border-bottom: 1px solid #fff;
+}
+.tab_container {
+    border: 1px solid #DDDDDD;
+    border-top: none;
+    clear: both;
+    float: left;
+    width: 100%;
+    background: #fff;
+    -moz-border-radius-bottomright: 5px;
+    -khtml-border-radius-bottomright: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    -khtml-border-radius-bottomleft: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+}
+.tab_content {
+    padding: 10px;
+    font-size:12px;
+}
+.tab_content p {
+    padding: 10px 5px;
+    font-size:12px;
+    line-height:18px;
+    text-align:justify;
+}
+.tab_content h2{
+    padding: 10px;
+    font-size:12px;
+}
