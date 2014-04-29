@@ -125,7 +125,6 @@
 
 		$.fn.serializeObject = function() {
 			var o = {};
-			alert($('#value1').val);
 			var a = this.serializeArray();
 			$.each(a, function() {
 				if (o[this.name] !== undefined) {
@@ -205,9 +204,6 @@
 			},
 			saveQuestion : function(ev) {
 				var questionDetails = $(ev.currentTarget).serializeObject();
-				if(questionDetails.getString(value1)=="on"){
-					alert("kjshd");
-				}
 				var question = new Question();
 				question.save(questionDetails, {
 					success : function(question) {
