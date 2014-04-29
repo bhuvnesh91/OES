@@ -2,8 +2,6 @@ package com.bebo.oes.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -40,7 +38,7 @@ public class UserController {
 
 	@RequestMapping(value = "/candidates", method = RequestMethod.POST)
 	@ResponseBody
-	public void saveUser(@RequestBody Candidate candidate,HttpServletRequest request) {
+	public void saveUser(@RequestBody Candidate candidate) {
 		Candidate candidate2 = new Candidate();
 		candidate2.setEmailId(candidate.getEmailId());
 		candidate2.setFirstName(candidate.getFirstName());

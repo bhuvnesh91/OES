@@ -7,25 +7,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bebo.oes.dao.CandidateDao;
-import com.bebo.oes.model.Candidate;
+import com.bebo.oes.dao.QuestionDao;
+import com.bebo.oes.model.Question;
+
 
 @Repository
 @Transactional
-public class CandidateDoaImpl extends AbstractDaoImpl<Candidate, Integer> implements CandidateDao {
-	protected CandidateDoaImpl() {
-		super(Candidate.class);
+public class QuestionDaoImpl extends AbstractDaoImpl<Question, Integer> implements QuestionDao {
+	protected QuestionDaoImpl() {
+		super(Question.class);
 	}
 
 	@Autowired
 	private SessionFactory sessionFactory;
 
 	@SuppressWarnings("unchecked")
-	@Override
-	public List<Candidate> getAllCandidates() {
-		return sessionFactory.getCurrentSession().createQuery("From Candidate").list();
+	public List<Question> getAllQuestions() {
+		return sessionFactory.getCurrentSession().createQuery("From Question").list();
 	}
-
-	
 
 }

@@ -48,6 +48,57 @@
     </table>
   </script>
 
+	<script type="text/template" id="question-list-template">
+    <a href="#/newQ" class="btn btn-primary">New</a>
+    <hr />
+    <table class="table striped">
+      <thead>
+        <tr>
+          <th>Question</th>
+        </tr>
+      </thead>
+      <tbody>
+		  <\% _.each(questions, function(question){ %> 
+			<tr>
+  				<td><\%=htmlEncode(question.get('questionDesc'))%> </td>
+			</tr>
+			<tr>
+				<th>Options</th>
+				  <\% _.each(question.get('optionList'),function(option){%>
+					<tr><td><\%=htmlEncode(option.name)%></td></tr>
+  				<\% }); %> 
+			</tr>
+       	<\% }); %> 
+      </tbody>
+    </table>
+  </script>
+
+	<script type="text/template" id="new-question-template">
+    <form class="new-question-form">
+      <legend>New Question</legend>
+        <label>Question Desc</label>
+        <input name="questionDesc" type="text">
+		<select name = "dept">
+			<option value="Java">Java</option>
+			<option value="Testing">Testing</option>
+		</select>
+        <label>Option 1</label>
+		<input name="value1" id ="option1Status" type="checkbox">
+        <input name="name1" id="option1" type="text">
+		<label>Option 2</label>
+		<input name="value2" id ="option2Status" type="checkbox">        
+		<input name="name2" id="option2" type="text">
+		<label>Option 3</label>
+		<input name="value3" id ="option3Status" type="checkbox">
+        <input name="name3" id="option3" type="text">
+		<label>Option 4</label>
+		<input name="value4" id ="option4Status" type="checkbox">
+        <input name="name4" id="option4" type="text">
+        <hr />
+       <button type="submit" class="btn">Create</button>
+    </form>
+  </script>
+
 	<script type="text/template" id="edit-candidate-template">
     <form class="edit-candidate-form" name = "candidate" id ="candidate">
       <legend><\%= candidate ? 'Edit' : 'New' %> Candidate</legend>
@@ -71,9 +122,10 @@
 		function htmlEncode(value) {
 			return $('<div/>').text(value).html();
 		}
-		
+
 		$.fn.serializeObject = function() {
 			var o = {};
+			alert($('#value1').val);
 			var a = this.serializeArray();
 			$.each(a, function() {
 				if (o[this.name] !== undefined) {
@@ -100,6 +152,14 @@
 			urlRoot : '/candidates'
 		});
 
+		var Questions = Backbone.Collection.extend({
+			url : '/questions'
+		});
+
+		var Question = Backbone.Model.extend({
+			urlRoot : '/questions'
+		});
+
 		var CandidateListView = Backbone.View.extend({
 			el : '.page',
 			render : function() {
@@ -118,6 +178,55 @@
 		});
 
 		var candidateListView = new CandidateListView();
+
+		var QuestionListView = Backbone.View.extend({
+			el : '.page',
+			render : function() {
+				var that = this;
+				var questions = new Questions();
+				questions.fetch({
+					success : function(questions) {
+						var template = _.template($('#question-list-template')
+								.html(), {
+							questions : questions.models
+						});
+						that.$el.html(template);
+					}
+				})
+			}
+		});
+
+		var questionListView = new QuestionListView();
+
+		var NewQuestionView = Backbone.View.extend({
+			el : '.page',
+			events : {
+				'submit .new-question-form' : 'saveQuestion'
+			},
+			saveQuestion : function(ev) {
+				var questionDetails = $(ev.currentTarget).serializeObject();
+				if(questionDetails.getString(value1)=="on"){
+					alert("kjshd");
+				}
+				var question = new Question();
+				question.save(questionDetails, {
+					success : function(question) {
+						router.navigate('', {
+							trigger : true
+						});
+					}
+				});
+				return false;
+			},
+			render : function() {
+				var template = _.template($('#new-question-template').html(), {
+					question : null
+				});
+				this.$el.html(template);
+			}
+		});
+
+		var newQuestionView = new NewQuestionView();
 
 		var CandidateEditView = Backbone.View.extend({
 			el : '.page',
@@ -156,18 +265,18 @@
 					});
 					that.candidate.fetch({
 						success : function(candidate) {
-							var template = _.template($('#edit-candidate-template')
-									.html(), {
+							var template = _.template($(
+									'#edit-candidate-template').html(), {
 								candidate : candidate
 							});
 							that.$el.html(template);
 						}
 					})
 				} else {
-					var template = _.template($('#edit-candidate-template').html(),
-							{
-								candidate : null
-							});
+					var template = _.template($('#edit-candidate-template')
+							.html(), {
+						candidate : null
+					});
 					that.$el.html(template);
 				}
 			}
@@ -180,18 +289,22 @@
 				"" : "home",
 				"edit/:id" : "edit",
 				"new" : "edit",
+				"newQ" : "enter",
 			}
 		});
 
 		var router = new Router;
 		router.on('route:home', function() {
 			// render candidate list
-			candidateListView.render();
+			questionListView.render();
 		})
 		router.on('route:edit', function(id) {
 			candidateEditView.render({
 				id : id
 			});
+		})
+		router.on('route:enter', function() {
+			newQuestionView.render();
 		})
 		Backbone.history.start();
 	</script>

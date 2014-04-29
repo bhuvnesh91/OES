@@ -8,5 +8,4 @@ public interface CandidateDao extends AbstractDao<Candidate, Integer>{
 
 	public List<Candidate> getAllCandidates();
 
-
 }
