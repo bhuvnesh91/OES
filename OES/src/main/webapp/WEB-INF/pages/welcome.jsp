@@ -225,6 +225,7 @@
 				'submit .new-question-form' : 'saveQuestion'
 			},
 			saveQuestion : function(ev) {
+				var input = $(ev.currentTarget).context;
 				var questionDetails = $(ev.currentTarget).serializeObject();
 				var question = new QuestionFile();
 				question.save(questionDetails, {
