@@ -14,6 +14,7 @@ import com.bebo.oes.model.Department;
 import com.bebo.oes.model.Option;
 import com.bebo.oes.model.Question;
 import com.bebo.oes.model.QuestionDetails;
+import com.bebo.oes.model.QuestionFile;
 import com.bebo.oes.service.DepartmentService;
 import com.bebo.oes.service.OptionService;
 import com.bebo.oes.service.QuestionService;
@@ -29,7 +30,7 @@ public class QuestionController {
 
 	@RequestMapping(value = "/questions", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<Question> getOptions() {
+	public List<Question> getQuestions() {
 		List<Question> questionList = null;
 		questionList = questionService.getAllQuestions();
 		return questionList;
@@ -37,7 +38,7 @@ public class QuestionController {
 
 	@RequestMapping(value = "/questions", method = RequestMethod.POST)
 	@ResponseBody
-	public void saveUser(@RequestBody QuestionDetails questionDetails) {
+	public void saveQuestion(@RequestBody QuestionDetails questionDetails) {
 		List<Option> options = new ArrayList<Option>();
 		Question question = new Question();
 		question.setQuestionDesc(questionDetails.getQuestionDesc());
@@ -77,6 +78,12 @@ public class QuestionController {
 		options.add(option4);
 		question.setOptionList(options);
 		optionService.saveOptionAll(options);
+	}
+	
+	@RequestMapping(value = "/questionfile", method = RequestMethod.POST)
+	@ResponseBody
+	public void saveQuestions(@RequestBody QuestionFile questionFile) {
+		System.out.println("dsjk");
 	}
 
 }

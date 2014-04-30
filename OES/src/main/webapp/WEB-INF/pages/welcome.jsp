@@ -49,7 +49,8 @@
   </script>
 
 	<script type="text/template" id="question-list-template">
-    <a href="#/newQ" class="btn btn-primary">New</a>
+    <a href="#/newQ" class="btn btn-primary">New Question</a>
+ <a href="#/newUploadF" class="btn btn-primary">Upload File</a>
     <hr />
     <table class="table striped">
        <tbody>
@@ -94,6 +95,21 @@
         <input name="name4" id="option4" type="text">
         <hr />
        <button type="submit" class="btn">Create</button>
+    </form>
+  </script>
+  
+  <script type="text/template" id="new-question-file-template">
+    <form class="new-question-form" enctype="multipart/form-data">
+      <legend>Upload File for questions</legend>
+		<select name = "dept">
+ 				<\% _.each(departments, function(department){ %> 
+					<option value="<\%=htmlEncode(department.get('name'))%>"><\%=htmlEncode(department.get('name'))%></option>
+			<\% }); %> 
+		</select>
+        <label>File</label>
+		<input type="file" name="file"/>
+        <hr />
+       <button type="submit" class="btn">Upload</button>
     </form>
   </script>
 
@@ -160,7 +176,10 @@
 		var Departments = Backbone.Collection.extend({
 			url : '/departments'
 		});
-
+		
+		var QuestionFile = Backbone.Model.extend({
+			url : '/questionfile'
+		})
 
 		var CandidateListView = Backbone.View.extend({
 			el : '.page',
@@ -200,6 +219,43 @@
 
 		var questionListView = new QuestionListView();
 
+		var NewQuestionFileView = Backbone.View.extend({
+			el : '.page',
+			events : {
+				'submit .new-question-form' : 'saveQuestion'
+			},
+			saveQuestion : function(ev) {
+				var questionDetails = $(ev.currentTarget).serializeObject();
+				var question = new QuestionFile();
+				question.save(questionDetails, {
+					success : function(question) {
+						router.navigate('', {
+							trigger : true
+						});
+					}
+				});
+				return false;
+			},
+			render : function() {
+				var that = this;
+				var departments = new Departments();
+				departments.fetch({
+					success : function(departments) {
+						new1 = departments;
+						var template = _.template($('#new-question-file-template')
+								.html(), {
+							question : null,
+							departments : departments.models
+						});
+						that.$el.html(template);
+					}
+				});
+			}
+		});
+
+		var newQuestionFileView = new NewQuestionFileView();
+		
+		
 		var NewQuestionView = Backbone.View.extend({
 			el : '.page',
 			events : {
@@ -233,9 +289,10 @@
 				var new1;
 				var departments = new Departments();
 				departments.fetch({
-					success : function(departments){
+					success : function(departments) {
 						new1 = departments;
-						var template = _.template($('#new-question-template').html(), {
+						var template = _.template($('#new-question-template')
+								.html(), {
 							question : null,
 							departments : departments.models
 						});
@@ -309,6 +366,7 @@
 				"edit/:id" : "edit",
 				"new" : "edit",
 				"newQ" : "enter",
+				"newUploadF" : "upload",
 			}
 		});
 
@@ -324,6 +382,9 @@
 		})
 		router.on('route:enter', function() {
 			newQuestionView.render();
+		})
+		router.on('route:upload', function() {
+			newQuestionFileView.render();
 		})
 		Backbone.history.start();
 	</script>
