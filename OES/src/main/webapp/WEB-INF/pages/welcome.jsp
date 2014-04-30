@@ -52,13 +52,10 @@
     <a href="#/newQ" class="btn btn-primary">New</a>
     <hr />
     <table class="table striped">
-      <thead>
-        <tr>
-          <th>Question</th>
-        </tr>
-      </thead>
-      <tbody>
+       <tbody>
 		  <\% _.each(questions, function(question){ %> 
+			<tr> <td></td> </tr>			
+			<tr><th>Question<th></tr>
 			<tr>
   				<td><\%=htmlEncode(question.get('questionDesc'))%> </td>
 			</tr>
@@ -79,20 +76,21 @@
         <label>Question Desc</label>
         <input name="questionDesc" type="text">
 		<select name = "dept">
-			<option value="Java">Java</option>
-			<option value="Testing">Testing</option>
+ 				<\% _.each(departments, function(department){ %> 
+					<option value="<\%=htmlEncode(department.get('name'))%>"><\%=htmlEncode(department.get('name'))%></option>
+			<\% }); %> 
 		</select>
         <label>Option 1</label>
-		<input name="value1" id ="option1Status" type="checkbox">
+		<input name="value1" id ="option1Status" type="checkbox" value = true>
         <input name="name1" id="option1" type="text">
 		<label>Option 2</label>
-		<input name="value2" id ="option2Status" type="checkbox">        
+		<input name="value2" id ="option2Status" type="checkbox" value = true>        
 		<input name="name2" id="option2" type="text">
 		<label>Option 3</label>
-		<input name="value3" id ="option3Status" type="checkbox">
+		<input name="value3" id ="option3Status" type="checkbox" value = true>
         <input name="name3" id="option3" type="text">
 		<label>Option 4</label>
-		<input name="value4" id ="option4Status" type="checkbox">
+		<input name="value4" id ="option4Status" type="checkbox" value = true>
         <input name="name4" id="option4" type="text">
         <hr />
        <button type="submit" class="btn">Create</button>
@@ -159,6 +157,11 @@
 			urlRoot : '/questions'
 		});
 
+		var Departments = Backbone.Collection.extend({
+			url : '/departments'
+		});
+
+
 		var CandidateListView = Backbone.View.extend({
 			el : '.page',
 			render : function() {
@@ -191,7 +194,7 @@
 						});
 						that.$el.html(template);
 					}
-				})
+				});
 			}
 		});
 
@@ -203,6 +206,17 @@
 				'submit .new-question-form' : 'saveQuestion'
 			},
 			saveQuestion : function(ev) {
+				var input = $(ev.currentTarget).context;
+				$.each(input, function(i, item) {
+					if (item.attributes[0].value == "checkbox") {
+						if (item.checked == true)
+							item.value = true;
+						else {
+							item.checked = true;
+							item.value = false;
+						}
+					}
+				});
 				var questionDetails = $(ev.currentTarget).serializeObject();
 				var question = new Question();
 				question.save(questionDetails, {
@@ -215,10 +229,19 @@
 				return false;
 			},
 			render : function() {
-				var template = _.template($('#new-question-template').html(), {
-					question : null
+				var that = this;
+				var new1;
+				var departments = new Departments();
+				departments.fetch({
+					success : function(departments){
+						new1 = departments;
+						var template = _.template($('#new-question-template').html(), {
+							question : null,
+							departments : departments.models
+						});
+						that.$el.html(template);
+					}
 				});
-				this.$el.html(template);
 			}
 		});
 

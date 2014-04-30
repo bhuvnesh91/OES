@@ -20,6 +20,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 public class Question {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
 	private int id;
 	@Column(name = "Question_Desc")
 	private String questionDesc;

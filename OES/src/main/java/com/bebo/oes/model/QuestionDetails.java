@@ -1,15 +1,16 @@
 package com.bebo.oes.model;
 
+
 public class QuestionDetails {
 	private String questionDesc;
 	private String name1;
 	private String name2;
 	private String name3;
 	private String name4;
-	private boolean value1;
-	private boolean value2;
-	private boolean value3;
-	private boolean value4;
+	private String value1;
+	private String value2;
+	private String value3;
+	private String value4;
 	private String dept;
 	
 	
@@ -43,6 +44,56 @@ public class QuestionDetails {
 	public String getName2() {
 		return name2;
 	}
+	
+	
+	/**
+	 * @return the value1
+	 */
+	public String getValue1() {
+		return value1;
+	}
+	/**
+	 * @param value1 the value1 to set
+	 */
+	public void setValue1(String value1) {
+		this.value1 = value1;
+	}
+	/**
+	 * @return the value2
+	 */
+	public String getValue2() {
+		return value2;
+	}
+	/**
+	 * @param value2 the value2 to set
+	 */
+	public void setValue2(String value2) {
+		this.value2 = value2;
+	}
+	/**
+	 * @return the value3
+	 */
+	public String getValue3() {
+		return value3;
+	}
+	/**
+	 * @param value3 the value3 to set
+	 */
+	public void setValue3(String value3) {
+		this.value3 = value3;
+	}
+	/**
+	 * @return the value4
+	 */
+	public String getValue4() {
+		return value4;
+	}
+	/**
+	 * @param value4 the value4 to set
+	 */
+	public void setValue4(String value4) {
+		this.value4 = value4;
+	}
 	/**
 	 * @param name2 the name2 to set
 	 */
@@ -73,54 +124,8 @@ public class QuestionDetails {
 	public void setName4(String name4) {
 		this.name4 = name4;
 	}
-	/**
-	 * @return the value1
-	 */
-	public boolean isValue1() {
-		return value1;
-	}
-	/**
-	 * @param value1 the value1 to set
-	 */
-	public void setValue1(boolean value1) {
-		this.value1 = value1;
-	}
-	/**
-	 * @return the value2
-	 */
-	public boolean isValue2() {
-		return value2;
-	}
-	/**
-	 * @param value2 the value2 to set
-	 */
-	public void setValue2(boolean value2) {
-		this.value2 = value2;
-	}
-	/**
-	 * @return the value3
-	 */
-	public boolean isValue3() {
-		return value3;
-	}
-	/**
-	 * @param value3 the value3 to set
-	 */
-	public void setValue3(boolean value3) {
-		this.value3 = value3;
-	}
-	/**
-	 * @return the value4
-	 */
-	public boolean isValue4() {
-		return value4;
-	}
-	/**
-	 * @param value4 the value4 to set
-	 */
-	public void setValue4(boolean value4) {
-		this.value4 = value4;
-	}
+
+	
 	/**
 	 * @return the dept
 	 */

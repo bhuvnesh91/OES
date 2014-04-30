@@ -1,5 +1,7 @@
 package com.bebo.oes.dao.impl;
 
+import java.util.List;
+
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -16,6 +18,12 @@ public class DepartmentDaoImpl implements DepartmentDao {
 	@Override
 	public Department getDepartmentByName(String dept) {
 		return (Department) sessionFactory.getCurrentSession().createQuery("from Department where lower(name) = :deptName").setParameter("deptName", dept.toLowerCase()).uniqueResult();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Department> getAllDepartments() {
+		return sessionFactory.getCurrentSession().createQuery("From Department").list();
 	}
 
 }
