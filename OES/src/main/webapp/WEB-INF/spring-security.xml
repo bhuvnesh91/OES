@@ -6,7 +6,7 @@
 	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
 	<http auto-config="true">
-		<form-login login-page="/login" default-target-url="/welcome"
+		<form-login login-page="/login" default-target-url="/customlogin"
 	always-use-default-target="true" authentication-failure-url="/loginfailed" />
 		<logout logout-url="/j_spring_security_logout"
 			invalidate-session="true" />

@@ -8,4 +8,6 @@ public interface QuestionDao extends AbstractDao<Question, Integer> {
 
 	List<Question> getAllQuestions();
 
+	int getMaxId();
+
 }

@@ -1,32 +1,36 @@
 package com.bebo.oes.model;
 
-import java.io.File;
+import org.springframework.web.multipart.MultipartFile;
 
 public class QuestionFile {
-	private int id;
-	private File file;
+	private String dept;
+	private MultipartFile file;
+	
 	/**
-	 * @return the id
+	 * @return the dept
 	 */
-	public int getId() {
-		return id;
+	public String getDept() {
+		return dept;
 	}
 	/**
-	 * @param id the id to set
+	 * @param dept the dept to set
 	 */
-	public void setId(int id) {
-		this.id = id;
+	public void setDept(String dept) {
+		this.dept = dept;
 	}
 	/**
 	 * @return the file
 	 */
-	public File getFile() {
+	/**
+	 * @return the file
+	 */
+	public MultipartFile getFile() {
 		return file;
 	}
 	/**
 	 * @param file the file to set
 	 */
-	public void setFile(File file) {
+	public void setFile(MultipartFile file) {
 		this.file = file;
 	}
 

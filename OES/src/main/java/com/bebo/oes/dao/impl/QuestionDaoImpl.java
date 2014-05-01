@@ -3,6 +3,7 @@ package com.bebo.oes.dao.impl;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,11 @@ public class QuestionDaoImpl extends AbstractDaoImpl<Question, Integer> implemen
 	@SuppressWarnings("unchecked")
 	public List<Question> getAllQuestions() {
 		return sessionFactory.getCurrentSession().createQuery("From Question").list();
+	}
+
+	@Override
+	public int getMaxId() {
+		return (Integer) sessionFactory.getCurrentSession().createCriteria(Question.class).setProjection(Projections.max("id")).uniqueResult();
 	}
 
 }

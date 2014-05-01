@@ -1,14 +1,20 @@
 package com.bebo.oes.controller;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bebo.oes.model.Department;
 import com.bebo.oes.model.Option;
@@ -77,13 +83,44 @@ public class QuestionController {
 		options.add(option3);
 		options.add(option4);
 		question.setOptionList(options);
-		optionService.saveOptionAll(options);
+		questionService.saveQuestion(question);
 	}
-	
+
 	@RequestMapping(value = "/questionfile", method = RequestMethod.POST)
+	public String saveQuestions(@ModelAttribute("questionFile") QuestionFile questionFile) {
+		Department department = departmentService.getDepartmentByName(questionFile.getDept());
+		MultipartFile multipartFile = questionFile.getFile();
+		String fileName = null;
+		File file = null;
+		if (multipartFile != null) {
+			BufferedOutputStream stream = null;
+			fileName = multipartFile.getOriginalFilename();
+			byte[] bytes;
+			try {
+				bytes = multipartFile.getBytes();
+				file = new File(fileName);
+				stream = new BufferedOutputStream(new FileOutputStream(file));
+				stream.write(bytes);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					stream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			questionService.saveAllQuestions(file.getAbsolutePath(), department);
+		}
+		return "redirect:/welcome";
+	}
+
+	@RequestMapping(value = "/questionsCandidate", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public void saveQuestions(@RequestBody QuestionFile questionFile) {
-		System.out.println("dsjk");
+	public Question getQuestionCandidate() {
+		Question question = questionService.getQuestion();
+		return question;
 	}
 
 }

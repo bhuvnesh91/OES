@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>BackboneTutorials.com Beginner Video</title>
+<title>OES</title>
 <link rel="stylesheet"
 	href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.1.1/css/bootstrap.min.css">
 </head>
@@ -10,7 +10,7 @@
 
 
 	<div class="container">
-		<h1>Candidate Manager</h1>
+		<h1>Question Manager</h1>
 		<hr />
 		<div class="page"></div>
 	</div>
@@ -26,31 +26,9 @@
 		src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.2/backbone-min.js"></script>
 
 
-	<script type="text/template" id="candidate-list-template">
-    <a href="#/new" class="btn btn-primary">New</a>
-    <hr />
-    <table class="table striped">
-      <thead>
-        <tr>
-          <th>First Name</th><th>Phone Number</th><th>EmailId</th><th></th>
-        </tr>
-      </thead>
-      <tbody>
-		  <\% _.each(candidates, function(candidate){ %> 
-			<tr>
-  				<td><\%=htmlEncode(candidate.get('firstName'))%> </td>
-            	<td><\%=htmlEncode(candidate.get('phoneNumber'))%></td>
-            	<td><\%=htmlEncode(candidate.get('emailId'))%></td>
-            	<td><a class="btn" href="#/edit/<\%= candidate.get('id')%> ">Edit</a></td>
-          </tr>
-       	<\% }); %> 
-      </tbody>
-    </table>
-  </script>
-
 	<script type="text/template" id="question-list-template">
     <a href="#/newQ" class="btn btn-primary">New Question</a>
- <a href="#/newUploadF" class="btn btn-primary">Upload File</a>
+    <a href="#/newUploadF" class="btn btn-primary">Upload File</a>
     <hr />
     <table class="table striped">
        <tbody>
@@ -97,40 +75,21 @@
        <button type="submit" class="btn">Create</button>
     </form>
   </script>
-  
-  <script type="text/template" id="new-question-file-template">
-    <form class="new-question-form" enctype="multipart/form-data">
+
+	<script type="text/template" id="new-question-file-template">
+    <form class="new-question-file-form" action ="questionfile" enctype="multipart/form-data" method="POST" modelAttribute = "questionFile" name="questionFile">
       <legend>Upload File for questions</legend>
-		<select name = "dept">
+		<select name = "dept" path ="dept">
  				<\% _.each(departments, function(department){ %> 
 					<option value="<\%=htmlEncode(department.get('name'))%>"><\%=htmlEncode(department.get('name'))%></option>
 			<\% }); %> 
 		</select>
         <label>File</label>
-		<input type="file" name="file"/>
+		<input type="file" name="file" path = "file"/>
         <hr />
        <button type="submit" class="btn">Upload</button>
     </form>
   </script>
-
-	<script type="text/template" id="edit-candidate-template">
-    <form class="edit-candidate-form" name = "candidate" id ="candidate">
-      <legend><\%= candidate ? 'Edit' : 'New' %> Candidate</legend>
-        <label>First Name</label>
-        <input name="firstName" type="text" value="<\%= candidate ? candidate.get('firstName') : '' %>">
-        <label>Phone Number</label>
-        <input name="phoneNumber" type="text" value="<\%= candidate ? candidate.get('phoneNumber') : '' %>">
-        <label>EmailId</label>
-        <input name="emailId" type="text" value="<\%= candidate ? candidate.get('emailId') : '' %>">
-        <hr />
-       <button type="submit" class="btn"><\%= candidate ? 'Update' : 'Create' %></button>
-       <\% if(candidate) { %>
-        <input type="hidden" name="id" value="<\%= candidate.get('id') %>" />
-       <button data-candidate-id="<\%= candidate.id %>" class="btn btn-danger delete">Delete</button>
-       <\%};%>
-    </form>
-  </script>
-
 
 	<script>
 		function htmlEncode(value) {
@@ -157,14 +116,6 @@
 			options.url = '.' + options.url;
 		});
 
-		var Candidates = Backbone.Collection.extend({
-			url : '/candidates'
-		});
-
-		var Candidate = Backbone.Model.extend({
-			urlRoot : '/candidates'
-		});
-
 		var Questions = Backbone.Collection.extend({
 			url : '/questions'
 		});
@@ -176,30 +127,12 @@
 		var Departments = Backbone.Collection.extend({
 			url : '/departments'
 		});
-		
-		var QuestionFile = Backbone.Model.extend({
-			url : '/questionfile'
-		})
 
-		var CandidateListView = Backbone.View.extend({
-			el : '.page',
-			render : function() {
-				var that = this;
-				var candidates = new Candidates();
-				candidates.fetch({
-					success : function(candidates) {
-						var template = _.template($('#candidate-list-template')
-								.html(), {
-							candidates : candidates.models
-						});
-						that.$el.html(template);
-					}
-				})
-			}
+		var QuestionFile = Backbone.Model.extend({
+			url : '/questionfile',
 		});
 
-		var candidateListView = new CandidateListView();
-
+	
 		var QuestionListView = Backbone.View.extend({
 			el : '.page',
 			render : function() {
@@ -221,31 +154,15 @@
 
 		var NewQuestionFileView = Backbone.View.extend({
 			el : '.page',
-			events : {
-				'submit .new-question-form' : 'saveQuestion'
-			},
-			saveQuestion : function(ev) {
-				var input = $(ev.currentTarget).context;
-				var questionDetails = $(ev.currentTarget).serializeObject();
-				var question = new QuestionFile();
-				question.save(questionDetails, {
-					success : function(question) {
-						router.navigate('', {
-							trigger : true
-						});
-					}
-				});
-				return false;
-			},
 			render : function() {
 				var that = this;
 				var departments = new Departments();
 				departments.fetch({
 					success : function(departments) {
 						new1 = departments;
-						var template = _.template($('#new-question-file-template')
-								.html(), {
-							question : null,
+						var template = _.template($(
+								'#new-question-file-template').html(), {
+							questionFile : null,
 							departments : departments.models
 						});
 						that.$el.html(template);
@@ -255,8 +172,7 @@
 		});
 
 		var newQuestionFileView = new NewQuestionFileView();
-		
-		
+
 		var NewQuestionView = Backbone.View.extend({
 			el : '.page',
 			events : {
@@ -304,62 +220,6 @@
 		});
 
 		var newQuestionView = new NewQuestionView();
-
-		var CandidateEditView = Backbone.View.extend({
-			el : '.page',
-			events : {
-				'submit .edit-candidate-form' : 'saveCandidate',
-				'click .delete' : 'deleteCandidate'
-			},
-			saveCandidate : function(ev) {
-				var candidateDetails = $(ev.currentTarget).serializeObject();
-				var candidate = new Candidate();
-				candidate.save(candidateDetails, {
-					success : function(candidate) {
-						router.navigate('', {
-							trigger : true
-						});
-					}
-				});
-				return false;
-			},
-			deleteCandidate : function(ev) {
-				this.candidate.destroy({
-					success : function() {
-						console.log('destroyed');
-						router.navigate('', {
-							trigger : true
-						});
-					}
-				});
-				return false;
-			},
-			render : function(options) {
-				var that = this;
-				if (options.id) {
-					that.candidate = new Candidate({
-						id : options.id
-					});
-					that.candidate.fetch({
-						success : function(candidate) {
-							var template = _.template($(
-									'#edit-candidate-template').html(), {
-								candidate : candidate
-							});
-							that.$el.html(template);
-						}
-					})
-				} else {
-					var template = _.template($('#edit-candidate-template')
-							.html(), {
-						candidate : null
-					});
-					that.$el.html(template);
-				}
-			}
-		});
-
-		var candidateEditView = new CandidateEditView();
 
 		var Router = Backbone.Router.extend({
 			routes : {
