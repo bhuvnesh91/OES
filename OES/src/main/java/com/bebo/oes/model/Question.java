@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,12 +25,14 @@ public class Question {
 	private int id;
 	@Column(name = "Question_Desc")
 	private String questionDesc;
-	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Option> optionList;
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
 	@JoinColumn(name = "dept_id")
 	private Department department;
+	@Column(name = "complexity")
+	private int complexity;
 
 	public int getId() {
 		return id;
@@ -37,6 +40,14 @@ public class Question {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public int getComplexity() {
+		return complexity;
+	}
+
+	public void setComplexity(int complexity) {
+		this.complexity = complexity;
 	}
 
 	public String getQuestionDesc() {
@@ -47,34 +58,19 @@ public class Question {
 		this.questionDesc = questionDesc;
 	}
 
-	/**
-	 * @return the optionList
-	 */
 	public List<Option> getOptionList() {
 		return optionList;
 	}
 
-	/**
-	 * @param optionList
-	 *            the optionList to set
-	 */
 	public void setOptionList(List<Option> optionList) {
 		this.optionList = optionList;
 	}
 
-	/**
-	 * @return the department
-	 */
 	public Department getDepartment() {
 		return department;
 	}
 
-	/**
-	 * @param department
-	 *            the department to set
-	 */
 	public void setDepartment(Department department) {
 		this.department = department;
 	}
-
 }

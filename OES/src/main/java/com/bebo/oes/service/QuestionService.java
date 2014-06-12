@@ -14,5 +14,5 @@ public interface QuestionService {
 	void saveAllQuestions(String filename,Department department);
 
 	Question getQuestion();
-
+	
 }

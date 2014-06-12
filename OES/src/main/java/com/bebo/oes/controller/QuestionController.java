@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,6 +40,9 @@ public class QuestionController {
 	public List<Question> getQuestions() {
 		List<Question> questionList = null;
 		questionList = questionService.getAllQuestions();
+		Set<Question> questions = questionList.get(0).getDepartment().getQuestionList();
+		for (Question question : questions)
+			System.out.println(question.getQuestionDesc());
 		return questionList;
 	}
 
@@ -83,6 +87,7 @@ public class QuestionController {
 		options.add(option3);
 		options.add(option4);
 		question.setOptionList(options);
+		question.setComplexity(questionDetails.getComplexity());
 		questionService.saveQuestion(question);
 	}
 

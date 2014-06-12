@@ -46,13 +46,44 @@
     </table>
   </script>
 
+	<script type="text/template" id="candidate-instruction-page">
+    <pre>
+Instructions :
+	1. There are 5 question.
+	2. All questions are necessary.
+</pre>
+<a href="#start/<\%=voucher%>" class="btn btn-primary">Start Exam</a>
+  </script>
+
 	<script type="text/template" id="candidate-login-page">
-  	  <table class="table striped">
-  	     <tbody>
-			<tr><td>Instruction Page</td></tr>
-  	    </tbody>
- 	   </table>
- 		<a href="#/start" class="btn btn-primary">Start Exam</a>
+  	  <h3>Create Account</h3>
+		<form name="cAccount" class="new-candidate-form">
+		<div class="control-group firstName">
+			<label for="firstName">Name</label><input type="text" name="firstName"
+				required="required"><span class="help-inline"></span>
+		</div>
+		<div class="control-group phoneNumber">
+			<label for="phoneNumber">Contact Number</label><input type="tel"
+				name="phoneNumber" required="required"><span class="help-inline"></span>
+		</div>
+		<div class="control-group emailId">
+			<label for="emailId">Email Id</label><input type="email" name="emailId"
+				required="required"><span class="help-inline"></span>
+		</div>
+		<div class="control-group dob">
+			<label for="dob">DOB</label><input type="date" name="dob"
+				required="required"><span class="help-inline"></span>
+		</div>
+		<div class="control-group fName">
+			<label for="fName">Father's Name</label><input type="text"
+				name="fName" required="required"><span class="help-inline"></span>
+		</div>
+		<div class="control-group voucher">
+			<label for="voucher">Voucher</label><input type="text"
+				name="voucher" required="required"><span class="help-inline"></span>
+		</div>
+		<button type="submit" class="btn">Save Details</button>
+	</form>
  	 </script>
 
 	<script>
@@ -88,11 +119,92 @@
 			urlRoot : '/questionsCandidate'
 		});
 
+		var Candidate = Backbone.Model.extend({
+			urlRoot : '/saveCandidate',
+			validate : function(attributes) {
+				var errors = [];
+				if (!attributes.firstName) {
+					errors.push({
+						name : 'firstName',
+						message : 'Please fill Name field.'
+					});
+				}
+
+				if (!attributes.phoneNumber) {
+					errors.push({
+						name : 'phoneNumber',
+						message : 'Please fill Contact Number field.'
+					});
+				}
+				if (!attributes.emailId) {
+					errors.push({
+						name : 'emailId',
+						message : 'Please fill email id field.'
+					});
+				}
+				if (!attributes.dob) {
+					errors.push({
+						name : 'dob',
+						message : 'Please fill dob field.'
+					});
+				}
+				if (!attributes.fName) {
+					errors.push({
+						name : 'fName',
+						message : 'Please fill Father Name field.'
+					});
+				}
+				if (!attributes.voucher) {
+					errors.push({
+						name : 'voucher',
+						message : 'Please fill voucher number field.'
+					});
+				}
+				return errors.length > 0 ? errors : false;
+			}
+
+		});
+
 		var CandidateLoginView = Backbone.View.extend({
 			el : '.page',
+			events : {
+				'submit .new-candidate-form' : 'saveDetails'
+			},
 			render : function() {
 				var template = _.template($('#candidate-login-page').html());
 				this.$el.html(template);
+			},
+			saveDetails : function(ev) {
+				var candDetails = $(ev.currentTarget).serializeObject();
+				var candidate = new Candidate();
+				var that = this;
+				candidate.save(candDetails, {
+					success : function(voucher) {
+						that.hideErrors();
+						that.voucher = voucher;
+						var template = _.template($(
+								'#candidate-instruction-page').html({
+							voucher : voucher
+						}));
+						that.$el.html(template);
+					},
+					error : function(model, errors) {
+						that.hideErrors();
+						that.showErrors(errors);
+					}
+				});
+				return false;
+			},
+			showErrors : function(errors) {
+				_.each(errors, function(error) {
+					var controlGroup = this.$('.' + error.name);
+					controlGroup.addClass('error');
+					controlGroup.find('.help-inline').text(error.message);
+				}, this);
+			},
+			hideErrors : function() {
+				this.$('.control-group').removeClass('error');
+				this.$('.help-inline').text('');
 			}
 		});
 
@@ -118,7 +230,7 @@
 		var Router = Backbone.Router.extend({
 			routes : {
 				"" : "home",
-				"start" : "enter",
+				"start/:id" : "enter",
 			}
 		});
 
@@ -127,8 +239,10 @@
 			// render candidate list
 			candidateLoginView.render();
 		})
-		router.on('route:enter', function() {
-			newQuestionView.render();
+		router.on('route:enter', function(voucher) {
+			newQuestionView.render({
+				voucher : voucher
+			});
 		})
 		Backbone.history.start();
 	</script>

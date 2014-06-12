@@ -101,5 +101,4 @@ public class QuestionServiceImpl implements QuestionService {
 		int id = 1 + (int) (Math.random() * maxId);
 		return questionDao.findById(id);
 	}
-
 }

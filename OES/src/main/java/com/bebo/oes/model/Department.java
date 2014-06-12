@@ -10,8 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
 @Entity
 @Table(name = "Dept")
 public class Department {
@@ -20,9 +18,8 @@ public class Department {
 	int id;
 	@Column(name = "name")
 	String name;
-	@OneToMany(mappedBy="department")
-	@JsonIgnore
-	private Set<Question> questionLIst;
+	@OneToMany(mappedBy = "department")
+	private Set<Question> questionList;
 
 	public int getId() {
 		return id;
@@ -43,15 +40,16 @@ public class Department {
 	/**
 	 * @return the questionLIst
 	 */
-	public Set<Question> getQuestionLIst() {
-		return questionLIst;
+	public Set<Question> getQuestionList() {
+		return questionList;
 	}
 
 	/**
-	 * @param questionLIst the questionLIst to set
+	 * @param questionLIst
+	 *            the questionLIst to set
 	 */
-	public void setQuestionLIst(Set<Question> questionLIst) {
-		this.questionLIst = questionLIst;
+	public void setQuestionList(Set<Question> questionList) {
+		this.questionList = questionList;
 	}
-	
+
 }
