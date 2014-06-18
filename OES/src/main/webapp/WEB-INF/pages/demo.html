@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>OES</title>
+<link rel="stylesheet"
+	href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.1.1/css/bootstrap.min.css">
+</head>
+<body>
+
+
+	<div class="container">
+		<h1>Question Manager</h1>
+		<hr />
+		<div class="page"></div>
+	</div>
+	<div id="todoapp">
+		<header>
+			<h1>Todos by Backbone.js</h1>
+			<input id="new-todo" type="text" placeholder="What needs to be done?" />
+		</header>
+
+		<section id="main" style="display: block;">
+			<input id="toggle-all" type="checkbox" /> <label for="toggle-all">Mark
+				all as complete</label>
+			<ul id="todo-list"></ul>
+		</section>
+
+		<footer style="display: block;">
+			<div class="todo-count">
+				<b>2</b> items left
+			</div>
+		</footer>
+	</div>
+
+	<script
+		src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.2/jquery.min.js"
+		type="text/javascript"></script>
+	<script
+		src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.2/underscore-min.js"
+		type="text/javascript"></script>
+	<script
+		src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.2/backbone-min.js"></script>
+
+
+	<script type="text/template" id="question-list-template">
+    <a href="#/newQ" class="btn btn-primary">New Question</a>
+    <a href="#/newUploadF" class="btn btn-primary">Upload File</a>
+    <hr />
+    <table class="table striped">
+       <tbody>
+		  <\% _.each(questions, function(question){ %> 
+			<tr> <td></td> </tr>			
+			<tr><th><\%=htmlEncode(question.cid)%> Question<th></tr>
+			<tr>
+  				<td><\%=htmlEncode(question.get('questionDesc'))%> </td>
+			</tr>
+			<tr>
+				<th>Options</th>
+				  <\% _.each(question.get('optionList'),function(option){%>
+					<tr><td><\%=htmlEncode(option.name)%></td></tr>
+  				<\% }); %> 
+			</tr>
+       	<\% }); %> 
+      </tbody>
+    </table>
+  </script>
+
+	<script type="text/template" id="new-question-template">
+    <form class="new-question-form">
+      <legend>New Question</legend>
+        <label>Question Desc</label>
+        <input name="questionDesc" type="text">
+		<select name = "dept">
+ 				<\% _.each(departments, function(department){ %> 
+					<option value="<\%=htmlEncode(department.get('name'))%>"><\%=htmlEncode(department.get('name'))%></option>
+			<\% }); %> 
+		</select>
+        <label>Option 1</label>
+		<input name="value1" id ="option1Status" type="checkbox" value = true>
+        <input name="name1" id="option1" type="text">
+		<label>Option 2</label>
+		<input name="value2" id ="option2Status" type="checkbox" value = true>        
+		<input name="name2" id="option2" type="text">
+		<label>Option 3</label>
+		<input name="value3" id ="option3Status" type="checkbox" value = true>
+        <input name="name3" id="option3" type="text">
+		<label>Option 4</label>
+		<input name="value4" id ="option4Status" type="checkbox" value = true>
+        <input name="name4" id="option4" type="text">
+        <hr />
+       <button type="submit" class="btn">Create</button>
+    </form>
+  </script>
+
+	<script type="text/template" id="new-question-file-template">
+    <form class="new-question-file-form" action ="questionfile" enctype="multipart/form-data" method="POST" modelAttribute = "questionFile" name="questionFile">
+      <legend>Upload File for questions</legend>
+		<select name = "dept" path ="dept">
+ 				<\% _.each(departments, function(department){ %> 
+					<option value="<\%=htmlEncode(department.get('name'))%>"><\%=htmlEncode(department.get('name'))%></option>
+			<\% }); %> 
+		</select>
+        <label>File</label>
+		<input type="file" name="file" path = "file"/>
+        <hr />
+       <button type="submit" class="btn">Upload</button>
+    </form>
+  </script>
+
+
+	<script type="text/template" id="item-template">
+    <div class="view">
+      <input class="toggle" type="checkbox" <%= done ? 'checked="checked"' : '' %> />
+      <label><%- title %></label>
+      <a class="destroy"></a>
+    </div>
+    <input class="edit" type="text" value="<%- title %>" />
+</script>
+
+	<script type="text/template" id="stats-template">
+    <% if (done) { %>
+      <a id="clear-completed">Clear <%= done %> completed <%= done == 1 ? 'item' : 'items' %></a>
+    <% } %>
+    <div class="todo-count"><b><%= remaining %></b> <%= remaining == 1 ? 'item' : 'items' %> left</div>
+</script>
+	<script>
+		$(function() {
+
+			var Todo = Backbone.Model.extend({
+				defaults : function() {
+					return {
+						title : "no title...",
+						order : Todos.nextOrder(),
+						done : false
+					};
+				},
+				toggle : function() {
+					this.save({
+						done : !this.get("done")
+					});
+				}
+			});
+
+			var TodoList = Backbone.Collection.extend({
+				model : Todo,
+				localStorage : new Backbone.LocalStorage("todos-backbone"),
+				done : function() {
+					return this.where({
+						done : true
+					});
+				},
+				remaining : function() {
+					return this.without.apply(this, this.done());
+				},
+				nextOrder : function() {
+					if (!this.length)
+						return 1;
+					return this.last().get("order") + 1;
+				},
+				comparator : 'order'
+			});
+			var Todos = new TodoList;
+
+			var TodoView = Backbone.View.extend({
+				tagName : "li",
+				template : _.template($("#item-template").html()),
+				events : {
+					"click .toggle" : "toggleDone",
+					"dblclick .view" : "edit",
+					"click a.destroy" : "clear",
+					"keypress .edit" : "updateOnEnter",
+					"blur .edit" : "close"
+				},
+				initialize : function() {
+					this.listenTo(this.model, "change", this.render);
+					this.listenTo(this.model, "destroy", this.remove);
+				},
+				render : function() {
+					this.$el.html(this.template(this.model.toJSON()));
+					this.$el.toggleClass("done", this.model.get("done"));
+					this.input = this.$(".edit");
+					return this;
+				},
+				toggleDone : function() {
+					this.model.toggle();
+				},
+				edit : function() {
+					this.$el.addClass("editing");
+					this.input.focus();
+				},
+				close : function() {
+					var value = this.input.val();
+					if (!value) {
+						this.clear();
+					} else {
+						this.model.save({
+							title : value
+						});
+						this.$el.removeClass("editing");
+					}
+				},
+				updateOnEnter : function(e) {
+					if (e.keyCode == 13)
+						this.close();
+				},
+				clear : function() {
+					this.model.destroy();
+				}
+
+			});
+
+			var AppView = Backbone.View.extend({
+				el : $("#todoapp"),
+				statsTemplate : _.template($("#stats-template").html()),
+				events : {
+					"keypress #new-todo" : "createOnEnter",
+					"click #clear-completed" : "clearCompleted",
+					"click #toggle-all" : "toggleAllComplete"
+				},
+
+				initialize : function() {
+					alert("hello");
+					this.input = this.$("#new-todo");
+					this.allCheckbox = this.$("#toggle-all")[0];
+
+					this.listenTo(Todos, "add", this.addOne);
+					this.listenTo(Todos, "reset", this.addAll);
+					this.listenTo(Todos, "all", this.render);
+
+					this.footer = this.$("footer");
+					this.main = $("#main");
+
+					Todos.fetch();
+				},
+
+				render : function() {
+					var done = Todos.done().length;
+					var remaining = Todos.remaining().length;
+
+					if (Todos.length) {
+						this.main.show();
+						this.footer.show();
+						this.footer.html(this.statsTemplate({
+							done : done,
+							remaining : remaining
+						}));
+					} else {
+						this.main.hide();
+						this.footer.hide();
+					}
+
+					this.allCheckbox.checked = !remaining;
+				},
+
+				addOne : function(todo) {
+					var view = new TodoView({
+						model : todo
+					});
+					this.$("#todo-list").append(view.render().el);
+				},
+				addAll : function() {
+					Todos.each(this.addOne, this);
+				},
+
+				createOnEnter : function(e) {
+					if (e.keyCode != 13)
+						return;
+					if (!this.input.val())
+						return;
+
+					Todos.create({
+						title : this.input.val()
+					});
+					this.input.val("");
+				},
+				clearCompleted : function() {
+					_.invoke(Todos.done(), "destroy");
+					return false;
+				},
+
+				toggleAllComplete : function() {
+					var done = this.allCheckbox.checked;
+					Todos.each(function(todo) {
+						todo.save({
+							"done" : done
+						});
+					});
+				}
+
+			});
+			var App = new AppView;
+
+		}());
+	</script>
+</body>
+</html>
